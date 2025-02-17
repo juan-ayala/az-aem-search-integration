@@ -5,4 +5,22 @@ application:
     packages:
       az-aem-search-integration:
         license: Apache-2.0
-        actions: {}
+        actions:
+          aem-page-index-upload-doc:
+            function: actions/aem-page-index-upload-doc/index.js
+            web: 'no'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: debug
+            annotations:
+              require-adobe-auth: false
+              final: true
+  events:
+    registrations:
+      Add AEM Page to Index:
+        description: Upload a document to the search index index when a page is published.
+        events_of_interest:
+          - provider_metadata: aemsites
+            event_codes:
+              - aem.sites.page.published
+        runtime_action: az-aem-search-integration/aem-page-index-upload-doc
