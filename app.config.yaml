@@ -12,6 +12,11 @@ application:
             runtime: nodejs:22
             inputs:
               LOG_LEVEL: debug
+              AZURE_TENANT_ID: $AZURE_TENANT_ID
+              AZURE_CLIENT_ID: $AZURE_CLIENT_ID
+              AZURE_CLIENT_SECRET: $AZURE_CLIENT_SECRET
+              AZURE_SEARCH_ENDPOINT: $AZURE_SEARCH_ENDPOINT
+              AZURE_SEARCH_INDEX_NAME: $AZURE_SEARCH_INDEX_NAME
             annotations:
               require-adobe-auth: false
               final: true
@@ -21,6 +26,11 @@ application:
             runtime: nodejs:22
             inputs:
               LOG_LEVEL: debug
+              AZURE_TENANT_ID: $AZURE_TENANT_ID
+              AZURE_CLIENT_ID: $AZURE_CLIENT_ID
+              AZURE_CLIENT_SECRET: $AZURE_CLIENT_SECRET
+              AZURE_SEARCH_ENDPOINT: $AZURE_SEARCH_ENDPOINT
+              AZURE_SEARCH_INDEX_NAME: $AZURE_SEARCH_INDEX_NAME
             annotations:
               require-adobe-auth: false
               final: true
