@@ -15,6 +15,15 @@ application:
             annotations:
               require-adobe-auth: false
               final: true
+          aem-page-index-delete-doc:
+            function: actions/aem-page-index-delete-doc/index.js
+            web: 'no'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: debug
+            annotations:
+              require-adobe-auth: false
+              final: true
   events:
     registrations:
       Add AEM Page to Index:
@@ -24,3 +33,10 @@ application:
             event_codes:
               - aem.sites.page.published
         runtime_action: az-aem-search-integration/aem-page-index-upload-doc
+      Delete AEM Page From The Index:
+        description: Delete a document from the search index when a page is unpublished.
+        events_of_interest:
+          - provider_metadata: aemsites
+            event_codes:
+              - aem.sites.page.unpublished
+        runtime_action: az-aem-search-integration/aem-page-index-delete-doc
