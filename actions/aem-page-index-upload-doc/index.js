@@ -1,25 +1,37 @@
-/* 
-* <license header>
-*/
-
-/**
- * This is a sample action showcasing how to access an external API
- *
- * Note:
- * You might want to disable authentication and authorization checks against Adobe Identity Management System for a generic action. In that case:
- *   - Remove the require-adobe-auth annotation for this action in the manifest.yml of your application
- *   - Remove the Authorization header from the array passed in checkMissingRequestInputs
- *   - The two steps above imply that every client knowing the URL to this deployed action will be able to invoke it without any authentication and authorization checks against Adobe Identity Management System
- *   - Make sure to validate these changes against your security requirements before deploying the action
- */
-
-
 const { Core } = require('@adobe/aio-sdk')
+const { SearchClient } = require('@azure/search-documents');
+const { ClientSecretCredential } = require('@azure/identity');
+const { errorResponse } = require('../utils');
+const HTMLScraper = require('../HTMLScraper');
 
-// main function that will be executed by Adobe I/O Runtime
-const main = async params => {
-  const logger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' })
-  logger.info(params)
+exports.main = async (params) => {
+
+  const logger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' });
+  logger.info(`Calling ${process.env['__OW_ACTION_NAME']}`);
+
+  return new HTMLScraper(params.data?.sourceUrl, params.data?.path)
+    .scrape()
+    .then(document => {
+      const credential = new ClientSecretCredential(
+        params.AZURE_TENANT_ID,
+        params.AZURE_CLIENT_ID,
+        params.AZURE_CLIENT_SECRET
+      );
+      const client = new SearchClient(
+        params.AZURE_SEARCH_ENDPOINT,
+        params.AZURE_SEARCH_INDEX_NAME,
+        credential);
+      return client.mergeOrUploadDocuments([document]);
+    })
+    .then(indexResult => {
+      for (const result of indexResult.results) {
+        logger.info(`Uploaded ${result.key}; succeeded? ${result.succeeded}`);
+      }
+      return {
+        statusCode: 200,
+        headers: {},
+        body: indexResult.results
+      };
+    })
+    .catch(error => errorResponse(500, error.message, logger));
 };
-
-exports.main = main
