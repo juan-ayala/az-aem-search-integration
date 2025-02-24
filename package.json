@@ -6,6 +6,7 @@
     "@adobe/aio-sdk": "^6",
     "@adobe/exc-app": "^1.3.0",
     "@adobe/generator-add-events-generic": "^2.0.1",
+    "@adobe/jwt-auth": "^2.0.0",
     "@adobe/react-spectrum": "^3.4.0",
     "@azure/identity": "^4.7.0",
     "@azure/search-documents": "^12.1.0",
