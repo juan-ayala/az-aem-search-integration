@@ -1,23 +1,21 @@
-# 337ThistleJay
+# Real-Time Search Indexing with AEM Events & App Builder
 
-Welcome to my Adobe I/O Application!
+Streamline search indexing in your AEM projects with real-time updates. [This post](https://www.theaemmaven.com/post/real-time-search-indexing-with-aem-events-app-builder) explores how AEM Events and Adobe App Builder can integrate with external search engines, ensuring content changes are quickly reflected in search results. It’s a scalable, efficient approach to keeping search experiences up to date.
 
 ## Setup
 
-- Populate the `.env` file in the project root and fill it as shown [below](#env)
+- Copy the `.dist.env` file to `.env`.
+- Fill in the values following the comments on the env file.
+- This file must **not** be committed to source control
 
 ## Local Dev
 
 - `aio app run` to start your local Dev server
 - App will run on `localhost:9080` by default
 
-By default the UI will be served locally but actions will be deployed and served from Adobe I/O Runtime. To start a
-local serverless stack and also run your actions locally use the `aio app run --local` option.
-
 ## Test & Coverage
 
 - Run `aio app test` to run unit tests for ui and actions
-- Run `aio app test --e2e` to run e2e tests
 
 ## Deploy & Cleanup
 
@@ -25,18 +23,6 @@ local serverless stack and also run your actions locally use the `aio app run --
 - `aio app undeploy` to undeploy the app
 
 ## Config
-
-### `.env`
-
-You can generate this file using the command `aio app use`. 
-
-```bash
-# This file must **not** be committed to source control
-
-## please provide your Adobe I/O Runtime credentials
-# AIO_RUNTIME_AUTH=
-# AIO_RUNTIME_NAMESPACE=
-```
 
 ### `app.config.yaml`
 
