@@ -1,28 +1,20 @@
-const authorize = require('@adobe/jwt-auth');
+const { context, getToken } = require('@adobe/aio-lib-ims');
 
 module.exports = class AEMServiceCredentials {
 
-    jwtAuthConfig = {};
-
-    constructor(params) {
+    constructor(params, prefix = 'AEM_SERVICECREDENTIALS_') {
 
         Object.keys(params)
-            .filter(key => key.startsWith('AEM_SERVICECREDENTIALS_'))
-            .forEach(key => this.jwtAuthConfig[this.#convEnvKeyToImsKey(key)] = params[key]);
-        if (this.jwtAuthConfig.privateKey) {
-            this.jwtAuthConfig.privateKey =
-                this.jwtAuthConfig.privateKey
+            .filter(key => key.startsWith(prefix))
+            .forEach(key => this[key.replace(prefix, '').toLowerCase()] = params[key]);
+        if (this.privateKey) {
+            this.privateKey =
+                this.privateKey
                     .replace(/\\n/g, '\n')
                     .replace(/\\r/g, '\r');
         }
+        context.set('aem-service-credential-ctx', this)
     }
 
-    getToken = () => authorize(this.jwtAuthConfig)
-        .then(response => response.access_token);
-
-    #convEnvKeyToImsKey = (key) => key
-        .replace('AEM_SERVICECREDENTIALS_', '')
-        .toLowerCase()
-        .replace(/([_][a-z])/g, (ltr) => ltr.toUpperCase())
-        .replace(/[_]/g, '');
+    getToken = () => getToken('aem-service-credential-ctx');
 };
