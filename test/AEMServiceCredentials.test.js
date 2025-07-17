@@ -1,4 +1,4 @@
-const AEMServiceCredentials = require('../src/api-mesh/actions/asset-tags/AEMServiceCredentials');
+const AEMServiceCredentials = require('../actions/AEMServiceCredentials');
 
 jest.mock('@adobe/aio-lib-ims');
 const { context, getToken } = require('@adobe/aio-lib-ims');
