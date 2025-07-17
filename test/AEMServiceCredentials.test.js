@@ -1,7 +1,17 @@
-const AEMServiceCredentials = require('../actions/AEMServiceCredentials');
+const AEMServiceCredentials = require('../src/api-mesh/actions/asset-tags/AEMServiceCredentials');
 
-jest.mock('@adobe/jwt-auth');
-const authorize = require('@adobe/jwt-auth');
+jest.mock('@adobe/aio-lib-ims');
+const { context, getToken } = require('@adobe/aio-lib-ims');
+jest.mock('@adobe/aio-lib-ims', () => ({
+    context: {
+        set: jest.fn()
+    },
+    getToken: jest.fn()
+}))
+
+beforeEach(() => {
+    jest.resetAllMocks();
+})
 
 describe('AEMServiceCredentials', () => {
 
@@ -17,8 +27,8 @@ describe('AEMServiceCredentials', () => {
         const credential = new AEMServiceCredentials(params);
 
         // assert
-        expect(credential.jwtAuthConfig).toEqual({
-            helloWorld: 'hello,world',
+        expect(credential).toMatchObject({
+            hello_world: 'hello,world',
             foo: 'bar'
         });
     });
@@ -27,13 +37,16 @@ describe('AEMServiceCredentials', () => {
 
         // arrange
         const params = { AEM_SERVICECREDENTIALS_HELLO_WORLD: 'hello,world' };
-        authorize.mockResolvedValue({ access_token: 'Supercalifragilisticexpialidocious' });
+        getToken.mockResolvedValue('Supercalifragilisticexpialidocious');
 
         // act/assert
         await expect(new AEMServiceCredentials(params).getToken()).resolves.toEqual('Supercalifragilisticexpialidocious');
-        expect(authorize).toHaveBeenCalledTimes(1);
-        expect(authorize).toHaveBeenCalledWith({
-            helloWorld: 'hello,world'
-        });
+        expect(context.set).toHaveBeenCalledTimes(1);
+        expect(context.set).toHaveBeenCalledWith(
+            'aem-service-credential-ctx',
+            expect.objectContaining({ hello_world: 'hello,world' })
+        );
+        expect(getToken).toHaveBeenCalledTimes(1);
+        expect(getToken).toHaveBeenCalledWith('aem-service-credential-ctx');
     });
 });
