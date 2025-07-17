@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@adobe/aio-lib-ims": "^7.0.2",
     "@adobe/aio-sdk": "^6",
     "@adobe/generator-add-events-generic": "^2.0.1",
-    "@adobe/jwt-auth": "^2.0.0",
     "@azure/identity": "^4.7.0",
     "@azure/search-documents": "^12.1.0",
     "cheerio": "^1.0.0"
